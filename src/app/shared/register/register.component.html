@@ -1,0 +1,235 @@
+<div class="main-div">
+    <mat-card class="col-md-6" *ngIf="!isRequestSent">
+        <mat-toolbar>Rejestracja</mat-toolbar>
+        <form [formGroup]="form" (ngSubmit)="sendRegisterForm()">
+            <div class="mt-2">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field>
+                            <input matInput placeholder="Hasło" type="password" formControlName="password">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field>
+                            <input matInput placeholder="Potwierdzenie hasła" type="password"
+                                formControlName="confirmPassword">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <mat-expansion-panel
+                            [expanded]="form.get('password').value?.length > 0 && (!form.get('password').valid || form.get('password').value !== form.get('confirmPassword').value)">
+                            <mat-panel-description>
+                                <div style="font-size: 11px" class="mt-2">
+                                    <div
+                                        [ngClass]="form.controls['password'].hasError('required') || form.controls['password'].hasError('minlength')  ? 'text-danger' : 'text-success'">
+                                        <i class="material-icons" style="font-size: 14px">{{ form.controls['password'].hasError('required') ||
+                                                form.controls['password'].hasError('minlength') ? 'cancel' :
+                                                  'check_circle' }}</i>
+                                        Osiem znaków
+                                    </div>
+                                    <div
+                                        [ngClass]="form.controls['password'].hasError('required') || form.controls['password'].hasError('hasNumber')  ? 'text-danger' : 'text-success'">
+                                        <i class="material-icons" style="font-size: 14px">{{ form.controls['password'].hasError('required') ||
+                                                form.controls['password'].hasError('hasNumber') ? 'cancel' :
+                                                  'check_circle' }}</i>
+                                        Jedna cyfra
+                                    </div>
+                                    <div
+                                        [ngClass]="form.controls['password'].hasError('required') || form.controls['password'].hasError('hasCapitalCase')  ? 'text-danger' : 'text-success'">
+                                        <i class="material-icons" style="font-size: 14px">{{ form.controls['password'].hasError('required') ||
+                                                form.controls['password'].hasError('hasCapitalCase') ? 'cancel' :
+                                                  'check_circle' }}</i>
+                                        Jedna wielka litera
+                                    </div>
+                                    <div
+                                        [ngClass]="form.controls['password'].hasError('required') || form.controls['password'].hasError('hasSmallCase')  ? 'text-danger' : 'text-success'">
+                                        <i class="material-icons" style="font-size: 14px">{{ form.controls['password'].hasError('required') ||
+                                                form.controls['password'].hasError('hasSmallCase') ? 'cancel' :
+                                                  'check_circle' }}</i>
+                                        Jedna mała litera
+                                    </div>
+                                    <div
+                                        [ngClass]="form.controls['password'].hasError('required') || form.controls['password'].hasError('hasSpecialCharacters') ? 'text-danger' : 'text-success'">
+                                        <i class="material-icons" style="font-size: 14px">{{ form.controls['password'].hasError('required') ||
+                                                form.controls['password'].hasError('hasSpecialCharacters') ? 'cancel' :
+                                                  'check_circle' }}</i>
+                                        Jeden znak specjalny (np. !@#)
+                                    </div>
+
+                                    <div
+                                        [ngClass]="form.controls['confirmPassword'].hasError('required') || form.controls['confirmPassword'].hasError('NoPasswordMatch') ? 'text-danger' : 'text-success'">
+                                        <i class="material-icons" style="font-size: 14px">{{ form.controls['confirmPassword'].hasError('NoPasswordMatch') ||
+                                            form.controls['confirmPassword'].hasError('hasSpecialCharacters') ? 'cancel' :
+                                              'check_circle' }}</i>
+                                        Hasła pasują do siebie
+                                    </div>
+
+                                </div>
+                            </mat-panel-description>
+                        </mat-expansion-panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-8">
+                        <mat-form-field>
+                            <input matInput placeholder="Adres email" type="email" formControlName="email">
+                            <mat-error
+                                *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">
+                                Wprowadź poprawny adres email
+                            </mat-error>
+                            <mat-error *ngIf="form.get('email').hasError('required')">
+                                Email jest <strong>wymagany</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="col-4">
+
+                        <div formGroupName="address">
+                            <mat-form-field>
+                                <input matInput [matDatepicker]="picker" [min]="minDate" [max]="currentDate" placeholder="Data urodzenia"
+                                    formControlName="dateOfBirth">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div formGroupName="address">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <input matInput placeholder="Imię" formControlName="name">
+                                <mat-error
+                                    *ngIf="form.get('address').get('name').hasError('minlength') && !form.get('address').get('name').hasError('required')">
+                                    Imię jest za krótkie
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('name').hasError('maxlength') && !form.get('address').get('name').hasError('required')">
+                                    Imię jest za długie
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('name').hasError('required')">
+                                    Imię jest <strong>wymagane</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <input matInput placeholder="Nazwisko" formControlName="surname">
+                                <mat-error
+                                    *ngIf="form.get('address').get('surname').hasError('minlength') && !form.get('address').get('surname').hasError('required')">
+                                    Nazwisko jest za krótkie
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('surname').hasError('maxlength') && !form.get('address').get('surname').hasError('required')">
+                                    Nazwisko jest za długie
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('surname').hasError('required')">
+                                    Nazwisko jest <strong>wymagane</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <input matInput placeholder="Nr telefonu" formControlName="phoneNumber">
+                                <mat-error
+                                    *ngIf="form.get('address').get('phoneNumber').hasError('minlength') && !form.get('address').get('phoneNumber').hasError('required')">
+                                    Numer telefonu jest za krótki
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('phoneNumber').hasError('maxlength') && !form.get('address').get('phoneNumber').hasError('required')">
+                                    Numer telefonu jest za długi
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('phoneNumber').hasError('required')">
+                                    Numer telefonu jest <strong>wymagany</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Miejscowość" formControlName="city">
+                                <mat-error
+                                    *ngIf="form.get('address').get('city').hasError('minlength') && !form.get('address').get('city').hasError('required')">
+                                    Miejscowość jest za krótka
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('city').hasError('maxlength') && !form.get('address').get('city').hasError('required')">
+                                    Miejscowość jest za długa
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('city').hasError('required')">
+                                    Miejscowość jest <strong>wymagana</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Ulica" formControlName="street">
+                                <mat-error
+                                    *ngIf="form.get('address').get('street').hasError('minlength') && !form.get('address').get('street').hasError('required')">
+                                    Ulica jest za krótka
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('street').hasError('maxlength') && !form.get('address').get('street').hasError('required')">
+                                    Ulica jest za długa
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('street').hasError('required')">
+                                    Ulica jest <strong>wymagana</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Numer mieszkania" formControlName="houseNumber">
+                                <mat-error
+                                    *ngIf="form.get('address').get('houseNumber').hasError('minlength') && !form.get('address').get('houseNumber').hasError('required')">
+                                    Numer mieszkania jest za krótki
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('houseNumber').hasError('maxlength') && !form.get('address').get('houseNumber').hasError('required')">
+                                    Numer mieszkania jest za długi
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('houseNumber').hasError('required')">
+                                    Numer mieszkania jest <strong>wymagany</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Kod pocztowy" formControlName="postCode">
+                                <mat-error
+                                    *ngIf="form.get('address').get('postCode').hasError('minlength') && !form.get('address').get('postCode').hasError('required')">
+                                    Kod pocztowy jest za krótki
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="form.get('address').get('postCode').hasError('maxlength') && !form.get('address').get('postCode').hasError('required')">
+                                    Kod pocztowy jest za długi
+                                </mat-error>
+                                <mat-error *ngIf="form.get('address').get('postCode').hasError('required')">
+                                    Imię jest <strong>wymagane</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <button [disabled]="form.invalid" mat-raised-button color="primary">Wyślij</button>
+            </div>
+        </form>
+    </mat-card>
+  <mat-card *ngIf="isRequestSent">
+    <mat-spinner class="mx-auto"></mat-spinner>
+    <h4 class="mt-3"><i>Trwa przetwarzanie żądania</i></h4>
+  </mat-card>
+</div>
